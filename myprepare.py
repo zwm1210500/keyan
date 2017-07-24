@@ -128,9 +128,9 @@ if __name__ == '__main__':
 
     # 计算 tfidf，并选取特征词
     print('cal tfidf start')
-    f_tfidf_temp = codecs.open('./test/tfidf_temp.txt', 'w', 'utf-8')
+    f_tfidf_temp = codecs.open('./test/tfidf.txt', 'w', 'utf-8')
     myword_set = []
-    f_tfidf = codecs.open("./test/tfidf.txt", 'w', encoding = "utf-8")
+    # f_tfidf = codecs.open("./test/tfidf.txt", 'w', encoding = "utf-8")
     D_num = len(text_list)
     for doc_i in range(0, len(text_list)):
         this_doc = text_list[doc_i]
@@ -155,19 +155,19 @@ if __name__ == '__main__':
             doc_weight = np.array(norm(doc_weight))
             doc_weight = doc_weight.tolist()
             
-        #记录每个文档（句子）的tf-idf词语权重
-        out_str = ''
-        for j in range(0, len(doc_weight)):
-            out_str += word_set[j] + ':' + str(doc_weight[j]) + ' '
-        f_tfidf.write(out_str.strip() + '\n')
-        #记录每个文档（句子）的tf-idf词语权重
+        # #记录每个文档（句子）的tf-idf词语权重（太大了）
+        # out_str = ''
+        # for j in range(0, len(doc_weight)):
+        #     out_str += word_set[j] + ':' + str(doc_weight[j]) + ' '
+        # f_tfidf.write(out_str.strip() + '\n')
+        # #记录每个文档（句子）的tf-idf词语权重
         # 计算一个文档（一句）的tfidf
 
         temp_word = list(temp_set)
         temp_tfidf = []
         for word in temp_word:
             temp_tfidf.append(doc_weight[ word_set.index(word) ])
-            f_tfidf_temp.write(word + str( doc_weight[ word_set.index(word) ] ) + ' ')
+            f_tfidf_temp.write(word + ':' + str( doc_weight[ word_set.index(word) ] ) + ' ')
         f_tfidf_temp.write('\n')
         
         # 去掉一半，tfidf比较小的
@@ -190,7 +190,7 @@ if __name__ == '__main__':
         # print('cal weight', i)
     # f.close()
     # print('cal tfidf finished')
-    f.close()
+    # f_tfidf.close()
     f_tfidf_temp.close()
 
     feature_set = toset(myword_set)
