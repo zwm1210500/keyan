@@ -1,15 +1,30 @@
 import os
 import sys
-import pynlpir
+import codecs
+# import jieba
 
 
 pos_num = 0
 unlabel_num = 0
 test_num = 0
 
+
+
+def loadDocs(filePath, encoding='utf-8'):
+    f = codecs.open(filePath, 'r', encoding=encoding)
+    content = f.read()
+    f.close()
+    text_list = str(content).split('\n')
+    text_list.remove( text_list[-1] )
+    for i in range(0, len(text_list)):
+        text_list[i] = text_list[i].strip()
+    return text_list
+
+
+'''
 # io 预备
 # 读取 pos
-f1 = open("./结巴分词/yuliao_pos.csv", 'r', encoding="utf-8")
+f1 = codecs.open("./结巴分词/yuliao_pos.csv", 'r', encoding="utf-8")
 content = f1.read()
 f1.close()
 text_list = content.split('\n')
@@ -86,23 +101,51 @@ for i in range(0, len(text_list)):
             mlist.append(a)
     text_list[i] = mlist
 # 去停用词
+'''
+
+word_set = set()
+
+text_list = loadDocs('./Lpu_Input/yuliao_pos.nlpresult')
+i = 0
+for doc in text_list:
+    parts = doc.split('|')
+    words = parts[-1].split(' ')
+    for word in words:
+        word_set.add(word)
+    print('process pos', i)
+    i += 1
+
+text_list = loadDocs('./Lpu_Input/yuliao_unlabel.nlpresult')
+i = 0
+for doc in text_list:
+    parts = doc.split('|')
+    words = parts[-1].split(' ')
+    for word in words:
+        word_set.add(word)
+    print('process unlabel', i)
+    i += 1
+
+text_list = loadDocs('./Lpu_Input/yuliao_test.nlpresult')
+i = 0
+for doc in text_list:
+    parts = doc.split('|')
+    words = parts[-1].split(' ')
+    for word in words:
+        word_set.add(word)
+    print('process test', i)
+    i += 1
 
 
 # 写入临时词库文件
-f = open('./data/Word_Library.wordlib', 'w', encoding='utf-8')
+f = codecs.open('./data/Word_Library.wordlib', 'w', encoding='utf-8')
 
-word_lib = []
-for doc in text_list:
-    for word in doc:
-        if word in word_lib:
-            continue
-        else:
-            word_lib.append(word)
+word_lib = list(word_set)
+word_lib.sort()
 
 for i in range(0, len(word_lib)):
     f.write( word_lib[i] + ' ' + str(i + 1) + '\n')
+    print('writing word', i)
 
 f.close()
 # 写入临时词库文件
 
-# print('Done')
